@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+</head>
+<body>
+    <iframe id="iframe_" src="https://dive.nutn.edu.tw/Experiment/kaleTestExperiment5.jsp?eid=27865&record=false" frameborder="0" name="dive" width="100%" height="768px"></iframe>
+    <script src="https://dive.nutn.edu.tw/Experiment/js/dive.linker.js"></script>
+    <script src="IO.js"></script>
+    <script>
+        // Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCqUGvInbtbkjfcxngimXJuE0IOlGz0OFk",
+            authDomain: "lms0609-7b1da.firebaseapp.com",
+            projectId: "lms0609-7b1da",
+            storageBucket: "lms0609-7b1da.appspot.com",
+            messagingSenderId: "1011911556922",
+            appId: "1:1011911556922:web:9a2e7ca4c23aa20d751a03",
+            measurementId: "G-F1V5RJH29T"
+        };
+    
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Function to periodically get values and save to Firebase
+        function getValueAndSave() {
+        var attributeId = '389037e0391d441c8123d484cccfac58'; // 要獲取的屬性 ID
+        var isPassing = diveLinker.getAttr(attributeId);
+
+        var user = firebase.auth().currentUser;
+        if (user) {
+            var userEmail = user.email;
+            var username = userEmail.split("@")[0]; // 取得 @ 前的字串
+            var databaseRef = firebase.database().ref("users/" + username);
+
+            databaseRef.child("test1").set(isPassing)
+            .then(function() {
+                console.log("Value saved to Firebase");
+            })
+            .catch(function(error) {
+                console.log("Error saving value:", error);
+            });
+        }
+        }
+
+        // Interval in milliseconds (5 seconds)
+        var interval = 5000;
+
+        // Start the interval
+        setInterval(getValueAndSave, interval);
+      </script>
+       
+       
+</html>

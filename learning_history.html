@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Learning History</title>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+</head>
+<body>
+  <h1>Learning History</h1>
+
+  <div id="content-status"></div>
+  <div id="rule-status"></div>
+  <div id="game-status"></div>
+  <div id="test1-status"></div>
+  <div id="test2-status"></div>
+  <div id="test3-status"></div>
+
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      // Add your Firebase configuration here
+        apiKey: "AIzaSyCqUGvInbtbkjfcxngimXJuE0IOlGz0OFk",
+        authDomain: "lms0609-7b1da.firebaseapp.com",
+        projectId: "lms0609-7b1da",
+        storageBucket: "lms0609-7b1da.appspot.com",
+        messagingSenderId: "1011911556922",
+        appId: "1:1011911556922:web:9a2e7ca4c23aa20d751a03",
+        measurementId: "G-F1V5RJH29T"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    var contentStatus = document.getElementById('content-status');
+    var ruleStatus = document.getElementById('rule-status');
+    var gameStatus = document.getElementById('game-status');
+    var test1Status = document.getElementById('test1-status');
+    var test2Status = document.getElementById('test2-status');
+    var test3Status = document.getElementById('test3-status');
+
+    var user = firebase.auth().currentUser;
+    if (user) {
+      var userEmail = user.email;
+      var username = userEmail.split('@')[0];
+      var databaseRef = firebase.database().ref('users/' + username);
+
+      // 監聽資料庫的變化
+      databaseRef.on('value', function(snapshot) {
+        var data = snapshot.val();
+        var content = data.content;
+        var rule = data.rule;
+        var game = data.game;
+        var test1 = data.test1;
+        var test2 = data.test2;
+        var test3 = data.test3;
+
+        // 學習回收知識
+        if (content !== undefined) {
+          var contentMessage = '';
+          if (content < 60) {
+            contentMessage = '你還沒看完喔！';
+          } else {
+            contentMessage = '很棒，已經看完了！';
+          }
+          contentStatus.textContent = '學習回收知識: ' + contentMessage;
+        }
+
+        // 遊戲規則介紹
+        if (rule !== undefined) {
+          var ruleMessage = '';
+          if (rule === 0) {
+            ruleMessage = '你還沒觀看規則，請加油！';
+          } else {
+            ruleMessage = '很好，你可以去挑戰遊戲了！';
+          }
+          ruleStatus.textContent = '遊戲規則介紹: ' + ruleMessage;
+        }
+
+        // 遊戲完成度
+        if (game !== undefined) {
+          var gameMessage = '';
+          if (game === 0) {
+            gameMessage = '趕快去挑戰~';
+          } else {
+            gameMessage = '恭喜你完成了遊戲挑戰~';
+          }
+          gameStatus.textContent = '遊戲完成度: ' + gameMessage;
+        }
+
+        // 測驗1
+        if (test1 !== undefined) {
+          var test1Message = '';
+          if (test1 === 0) {
+            test1Message = '請加油，加把勁！';
+          } else {
+            test1Message = '棒呆了，繼續保持~';
+          }
+          test1Status.textContent = '測驗1: ' + test1Message;
+        }
+
+        // 測驗2
+        if (test2 !== undefined) {
+          var test2Message = '';
+          if (test2 === 0) {
+            test2Message = '請加油，趕快完成題目喔！';
+          } else {
+            test2Message = '優秀，keep going~';
+          }
+          test2Status.textContent = '測驗2: ' + test2Message;
+        }
+
+        // 測驗3
+        if (test3 !== undefined) {
+          var test3Message = '';
+          if (test3 === 0) {
+            test3Message = '請加油，fighting！';
+          } else {
+            test3Message = '很棒，衝衝衝~';
+          }
+          test3Status.textContent = '測驗3: ' + test3Message;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

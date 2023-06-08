@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Personal Page</title>
+  <!-- Include the Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+  <style>
+    /* Micro Design style */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    #personal-page {
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 20px;
+      padding: 0;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+      padding: 0;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Status styles */
+    .status {
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    .status-message {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="personal-page">
+    <h1>Personal Page</h1>
+
+    <!-- Display user account information -->
+    <div id="user-account">
+      <h2>User Account</h2>
+      <p id="user-email"></p> <!-- Placeholder to display user email -->
+    </div>
+
+    <!-- Display personal learning history -->
+    <div id="learning-history">
+      <h2>Learning History</h2>
+      <ul id="history-list"></ul> <!-- Placeholder to display learning history -->
+    </div>
+
+    <div id="content-status" class="status"></div>
+    <div id="game-status" class="status"></div>
+    <div id="rule-status" class="status"></div>
+    <div id="test1-status" class="status"></div>
+    <div id="test2-status" class="status"></div>
+    <div id="test3-status" class="status"></div>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      // Add your Firebase configuration here
+        apiKey: "AIzaSyCqUGvInbtbkjfcxngimXJuE0IOlGz0OFk",
+        authDomain: "lms0609-7b1da.firebaseapp.com",
+        projectId: "lms0609-7b1da",
+        storageBucket: "lms0609-7b1da.appspot.com",
+        messagingSenderId: "1011911556922",
+        appId: "1:1011911556922:web:9a2e7ca4c23aa20d751a03",
+        measurementId: "G-F1V5RJH29T"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        var userEmail = user.email;
+        var username = userEmail.split('@')[0];
+        document.getElementById("user-email").textContent = "Email: " + userEmail;
+        // Load and display learning history from database
+        var historyList = document.getElementById("history-list");
+        var databaseRef = firebase.database().ref("learning_history/" + user.uid);
+        databaseRef.once("value", function(snapshot) {
+          snapshot.forEach(function(childSnapshot) {
+            var learningItem = childSnapshot.val();
+            var listItem = document.createElement("li");
+            listItem.textContent = learningItem.title + " - " + learningItem.date;
+            historyList.appendChild(listItem);
+          });
+        });
+      } else {
+        // User is not signed in, redirect to login page
+        window.location.href = "index.html";
+      }
+    });
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        var userEmail = user.email;
+        var username = userEmail.split('@')[0];
+        document.getElementById("user-email").textContent = "Email: " + userEmail;
+
+        // Listen for changes in the database
+        var databaseRef = firebase.database().ref('users/' + username);
+        databaseRef.on('value', function(snapshot) {
+          var data = snapshot.val();
+          var content = data.content || 0;
+          var game = data.game || 0;
+          var rule = data.rule || 0;
+          var test1 = data.test1 || 0;
+          var test2 = data.test2 || 0;
+          var test3 = data.test3 || 0;
+
+          // Learning content status
+          var contentMessage = content < 60 ? '你還沒看完喔！' : '很棒，已經看完了！';
+          document.getElementById('content-status').innerHTML = '<div class="status-message">學習回收知識:</div>' + contentMessage;
+
+          // Game completion status
+          var gameMessage = game === 0 ? '趕快去挑戰~' : '恭喜你完成了遊戲挑戰~';
+          document.getElementById('game-status').innerHTML = '<div class="status-message">遊戲完成度:</div>' + gameMessage;
+
+          // Game rule introduction status
+          var ruleMessage = rule === 0 ? '你還沒觀看規則，請加油！' : '很好，你可以去挑戰遊戲了！';
+          document.getElementById('rule-status').innerHTML = '<div class="status-message">遊戲規則介紹:</div>' + ruleMessage;
+
+          // Test 1 status
+          var test1Message = test1 === 0 ? '請加油，加把勁！' : '棒呆了，繼續保持~';
+          document.getElementById('test1-status').innerHTML = '<div class="status-message">測驗1:</div>' + test1Message;
+
+          // Test 2 status
+          var test2Message = test2 === 0 ? '請加油，趕快完成題目喔！' : '優秀，keep going~';
+          document.getElementById('test2-status').innerHTML = '<div class="status-message">測驗2:</div>' + test2Message;
+
+          // Test 3 status
+          var test3Message = test3 === 0 ? '請加油，fighting！' : '很棒，衝衝衝~';
+          document.getElementById('test3-status').innerHTML = '<div class="status-message">測驗3:</div>' + test3Message;
+        });
+      } else {
+        // User is not signed in, redirect to login page
+        window.location.href = "index.html";
+      }
+    });
+
+    // Logout function
+    function logout() {
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful, redirect to login page
+        window.location.href = "index.html";
+      }).catch(function(error) {
+        // An error happened
+        console.log(error.message);
+      });
+    }
+
+
+  </script>
+
+</body>
+</html>
