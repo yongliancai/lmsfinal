@@ -6,112 +6,125 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
   <style>
-    /* Add your custom CSS styles here */
-    .content-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  .content-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-  }
-  .content-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-    .content-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
+      /* Add your custom CSS styles here */
+      .content-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .content-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+    .content-image img {
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 0.3s;
+      object-fit: cover;
+      object-position: center;
     }
-    .content-overlay:hover {
-      opacity: 1;
+      .content-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .content-overlay:hover {
+        opacity: 1;
+      }
+      .content-text {
+      padding: 10px;
+      text-align: center;
     }
-    .content-text {
-    padding: 10px;
-    text-align: center;
+
+    .content-text h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .content-text p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+      .content-card {
+        flex: 0 0 300px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s;
+    }
+    .content-card:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .content-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
   }
 
-  .content-text h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .content-text p {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-    .content-card {
-    flex: 0 0 300px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s;
-  }
-  .content-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  .content-overlay img {
+    max-width: 50%;
+    max-height: 50%;
   }
   </style>
 </head>
 <body>
-  <h1>Learning Content</h1>
+  <h1>學習回收知識</h1>
 
   <!-- Content section -->
   <section id="content">
     <div class="content-wrapper">
       <div class="content-card">
         <div class="content-image">
-          <img src="紙飲料杯.png" alt="Content Image 1">
+          <img src="紙飲料杯.png" alt="Content Image 1" data-image="紙飲料杯.jpg">
         </div>
         <div class="content-text">
           <h2>紙飲料杯</h2>
-          <p>用紙杯吧！事情哪有這麼簡單。紙包不住火、也包不住水，能夠裝飲料是因為內有一層塑膠淋膜。雖然可以與紙餐盒等有塑膠淋膜的紙容器一同回收，廢紙還能回收，但分離出來的淋膜雖然可以再製，但市場不好、多數會被焚化處理，所以還是多自備環保杯購買吧。</p>
+          <p>#005
+
+            紙飲料杯
+            塑膠不環保，用紙杯吧！事情哪有這麼簡單。紙包不住火、也包不住水，能夠裝飲料是因為內有一層塑膠淋膜。雖然可以與紙餐盒等有塑膠淋膜的紙容器一同回收，廢紙還能回收，但分離出來的淋膜雖然可以再製，但市場不好、多數會被焚化處理，所以還是多自備環保杯購買吧。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="紙餐盒加蓋.png" alt="Content Image 2">
+          <img src="紙餐盒加蓋.png" alt="Content Image 2" data-image="紙餐盒加蓋.jpg">
         </div>
         <div class="content-text">
           <h2>紙餐盒加蓋</h2>
-          <p>Content description goes here...</p>
+          <p>這是外送餐點最常見的包裝。疫情後紙容器回收量已爆增 98%！回收前沖洗乾淨後請丟紙容器回收哦！紙容器處理廠可處理並且統一管理。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="透明塑膠袋.png" alt="Content Image 3">
+          <img src="透明塑膠袋.png" alt="Content Image 3" data-image="透明塑膠袋.jpg">
         </div>
         <div class="content-text">
           <h2>透明塑膠袋</h2>
-          <p>Content description goes here...</p>
+          <p>大家都知道應該回收做環保，其中塑膠袋更是我們生活中最頻繁被使用到的塑膠類型，但其實不是所有塑膠袋都能回收喔！最好記的心法就是：「材質單一、外觀乾淨」，只要掌握這兩個原則確實在回收前確認油脂、雜質都清理乾淨，也將外包裝的貼紙撕去後就可以塑膠回收了。但隨著限塑政策的推進，自備可重複使用的環保袋才是省錢又環保。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="速食紙餐盒.png" alt="Content Image 4">
+          <img src="速食紙餐盒.png" alt="Content Image 4" data-image="速食紙餐盒.jpg">
         </div>
         <div class="content-text">
           <h2>速食紙餐盒</h2>
-          <p>Content description goes here...</p>
+          <p>漢堡、雞塊、薯條盒，裝滿快樂熱量的紙盒，為了防油功能，表層會有塑膠淋膜，所以不能算是紙類，而是廢紙容器類！沖洗、攤平折疊後丟對分類，就能完成回收。為了自己和地球的健康，偶爾也可以減減熱量，還有源頭減量啦。</p>
         </div>
       </div>
     </div>
@@ -119,58 +132,84 @@
     <div class="content-wrapper">
       <div class="content-card">
         <div class="content-image">
-          <img src="植物纖維餐盒.png" alt="Content Image 5">
+          <img src="植物纖維餐盒.png" alt="Content Image 5" data-image="植物纖維餐盒.jpg">
         </div>
         <div class="content-text">
           <h2>植物纖維餐盒</h2>
-          <p>Content description goes here...</p>
+          <p>大地色的植物纖維餐盒，給人自然派印象。這類為了減塑美意而生的新材質越來越常見，雖然以植物為材料，原料使用的碳排放量可能較低，但如果以生命週期來看，目前植纖餐盒的回收價值較不明朗、也還沒有明確的回收規範，加上沒有塑膠淋膜的它，容易沾染食物殘渣、油脂，喪失回收價值，如果太髒請直接丟入一般垃圾。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="塑膠飲料杯.png" alt="Content Image 6">
+          <img src="塑膠飲料杯.png" alt="Content Image 6" data-image="塑膠飲料杯.jpg">
         </div>
         <div class="content-text">
           <h2>塑膠飲料杯</h2>
-          <p>Content description goes here...</p>
+          <p>沒事就想來杯飲料犒賞自己嗎？近年廠商除了可以回收的 PP 塑膠杯外，還可能選用「可堆肥」的 PLA 塑膠杯。環保署為了有效回收管理，將所有飲料塑膠杯納入資源回收，但由於PLA在台灣仍沒有適合的堆肥處理設施，因此PLA最後還是會以焚化處理。盡可能自備環保杯購買，可以享折扣又減少垃圾喔！</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="漢堡紙.png" alt="Content Image 7">
+          <img src="漢堡紙.png" alt="Content Image 7" data-image="漢堡紙.jpg">
         </div>
         <div class="content-text">
           <h2>漢堡紙</h2>
-          <p>Content description goes here...</p>
+          <p>沾滿食物殘渣、油脂、水氣的紙包裝...咦，其實不是紙！為了隔絕熱與油紙，這類包裝紙也具有塑膠淋膜，難以回收再利用，只能當成一般垃圾。如果食物沒吃完，別偷懶隨手一起一丟，一般垃圾中若夾雜廚餘的水分，會導致應該維持高溫的焚化爐降低效率與壽命。先將廚餘丟入廚餘桶，分開處理才行。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="鋁箔餐盒.png" alt="Content Image 8">
+          <img src="鋁箔餐盒.png" alt="Content Image 8" data-image="鋁箔餐盒.jpg">
         </div>
         <div class="content-text">
           <h2>鋁箔餐盒</h2>
-          <p>Content description goes here...</p>
+          <p>牽絲的焗烤義大利麵、富含湯汁的酒蒸蛤蜊，常靠鋁箔餐盒調理保存。這類鋁箔餐盒材質單純，加上具有厚度，比鋁箔紙多了份量，較容易蒐集也能降低回收成本，丟對就能幫助鋁箔餐盒們集合重生，只要清洗乾淨交給回收人員處理就行了。</p>
         </div>
       </div>
   
       <div class="content-card">
         <div class="content-image">
-          <img src="醬料盒.png" alt="Content Image 9">
+          <img src="醬料盒.png" alt="Content Image 9" data-image="醬料盒.jpg">
         </div>
         <div class="content-text">
           <h2>醬料盒</h2>
-          <p>Content description goes here...</p>
+          <p>吃雞塊，沾醬才是本體？醬料沾光光後，這類塑膠醬料盒你會怎麼處理呢？盒子稍微擦拭沖洗後（或把它沾得一乾二淨），和那層薄薄的封膜，一起丟入一般垃圾。或是下次試試不沾醬，減少一次性垃圾，也給雞塊一個當主角的機會吧！</p>
         </div>
       </div>
     </div>
   </section>
-  
+  <div class="content-overlay">
+    <img id="overlay-image" src="" alt="Overlay Image">
+  </div>
+
   <div id="duration-display"></div>
   <script>
+        // JavaScript to handle image overlay
+      const cards = document.querySelectorAll('.content-card');
+      const overlay = document.querySelector('.content-overlay');
+      const overlayImage = document.getElementById('overlay-image');
+
+      cards.forEach(card => {
+        const image = card.querySelector('.content-image img');
+        image.addEventListener('click', () => {
+          const src = image.getAttribute('data-image');
+          overlayImage.setAttribute('src', src);
+          overlay.classList.add('active');
+        });
+      });
+
+      overlay.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+
+
+
+
+
+
     // Firebase configuration
     var firebaseConfig = {
       apiKey: "AIzaSyCqUGvInbtbkjfcxngimXJuE0IOlGz0OFk",
